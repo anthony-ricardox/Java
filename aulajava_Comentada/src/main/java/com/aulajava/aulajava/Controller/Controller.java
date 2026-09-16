@@ -181,20 +181,6 @@ public class Controller {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Status 404
     }
 
-    @PostMapping(value = "cadastrar-aluno")
-    public ResponseEntity<Aluno> cadastrar(@RequestBody Aluno aluno) {
-        aluno.matricula = null;
-        Aluno salvo = repositoryAluno.save(aluno);
-        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
-    }
-
-    @GetMapping(value = "listar-aluno")
-    public List<Aluno> ListarAluno() {
-        return repositoryAluno.findAll();
-    }
-
-    @DeleteMapping(value = "")
-
     /**
      * RESUMO DOS ENDPOINTS CRIADOS:
      * 
@@ -215,4 +201,63 @@ public class Controller {
      * - JSON: Formato de dados para comunicação
      * - HTTP Status: Códigos que indicam o resultado da operação
      */
+
+    @PostMapping(value = "cadastrar-aluno")
+    public ResponseEntity<Aluno> cadastrar(@RequestBody Aluno aluno) {
+        aluno.matricula = null;
+        Aluno salvo = repositoryAluno.save(aluno);
+        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
+    }
+
+    @GetMapping(value = "listar-aluno")
+    public List<Aluno> ListarAluno() {
+        return repositoryAluno.findAll();
+    }
+
+    @DeleteMapping(value = "deletar-aluno/{matricula}")
+    public ResponseEntity<Long> deletaraluno(@PathVariable Long matricula) {
+        // @PathVariable: Extrai o valor {matricula} da URL
+
+        // Verifica se existe um aluno com esta matrícula
+        boolean aluno = repositoryAluno.existsById(matricula);
+
+        if (aluno) {
+            // Aluno existe: deleta do banco
+            repositoryAluno.deleteById(matricula);
+            return new ResponseEntity<>(matricula, HttpStatus.OK); // Status 200
+        }
+        // Aluno não existe: retorna erro
+        return new ResponseEntity<>(matricula, HttpStatus.NO_CONTENT); // Status 204
+    }
+
+    @PutMapping("atualizar-aluno/{matricula}")
+     public ResponseEntity<Aluno> atualizarprofessor(@PathVariable Long matricula,
+            @RequestBody Aluno aluno) {
+        // @PathVariable: matrícula da URL
+        // @RequestBody: novos dados do professor em JSON
+
+        // Optional: tipo que pode conter um valor ou estar vazio (evita
+        // NullPointerException)
+        Optional<Aluno> existeAluno = repositoryAluno.findById(matricula);
+
+        if (existeAluno.isPresent()) {
+            // Professor encontrado: atualiza os dados
+            Aluno atualizaAluno = existeAluno.get(); // Extrai o professor do Optional
+
+            // Atualiza os campos usando acesso direto (sem getters/setters)
+            atualizaAluno.nome = aluno.nome; // Atualiza nome
+            atualizaAluno.cpf = aluno.cpf; // Atualiza CPF
+            
+
+            // Salva as alterações no banco
+            repositoryAluno.save(atualizaAluno);
+            return new ResponseEntity<>(atualizaAluno, HttpStatus.OK); // Status 200
+        }
+        // Professor não encontrado: retorna erro
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Status 404
+    }
+
+
 }
+
+
