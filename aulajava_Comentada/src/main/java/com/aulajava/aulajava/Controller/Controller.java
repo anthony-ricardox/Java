@@ -193,10 +193,8 @@ public class Controller {
         return repositoryAluno.findAll();
     }
 
-@GetMapping("path")
-public String getMethodName(@RequestParam String param) {
-    return new String();
-}
+    @DeleteMapping(value = "")
+
     /**
      * RESUMO DOS ENDPOINTS CRIADOS:
      * 
