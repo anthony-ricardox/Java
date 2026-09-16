@@ -25,7 +25,6 @@ import com.aulajava.aulajava.Repository.RepositoryAluno; // Repositório para op
 import com.aulajava.aulajava.Repository.RepositoryProfessor; // Repositório para operações com Professor
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 /**
  * CLASSE CONTROLLER - CONTROLADOR REST DA API
  * 
@@ -190,11 +189,14 @@ public class Controller {
     }
 
     @GetMapping(value = "listar-aluno")
-    public List<Aluno> ListarAluno(){
-         return repositoryAluno.findAll();
+    public List<Aluno> ListarAluno() {
+        return repositoryAluno.findAll();
     }
-    
 
+@GetMapping("path")
+public String getMethodName(@RequestParam String param) {
+    return new String();
+}
     /**
      * RESUMO DOS ENDPOINTS CRIADOS:
      * 
